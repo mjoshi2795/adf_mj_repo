@@ -1,0 +1,39 @@
+{
+	"name": "LS_SF_01",
+	"properties": {
+		"parameters": {
+			"DB": {
+				"type": "string"
+			},
+			"WH": {
+				"type": "string"
+			},
+			"USER": {
+				"type": "string"
+			},
+			"ROLE": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SnowflakeV2",
+		"typeProperties": {
+			"authenticationType": "Basic",
+			"accountIdentifier": "cf39531.uk-south.azure",
+			"user": "@{linkedService().USER}",
+			"database": "@{linkedService().DB}",
+			"warehouse": "@{linkedService().WH}",
+			"role": "@{linkedService().ROLE}",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ApplicationKeyValut",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "SnowflakePwd"
+			},
+			"useUtcTimestamps": false
+		},
+		"version": "1.1"
+	}
+}
