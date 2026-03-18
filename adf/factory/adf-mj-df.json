@@ -10,7 +10,7 @@
 				"type": "string",
 				"value": "ACCOUNTADMIN"
 			},
-			"GP_USER": {
+			"gp_user": {
 				"type": "string",
 				"value": "mjoshi2795"
 			},
