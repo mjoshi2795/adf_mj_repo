@@ -9,6 +9,10 @@
 			"gp_role": {
 				"type": "string",
 				"value": "ACCOUNTADMIN"
+			},
+			"GP_USER": {
+				"type": "string",
+				"value": "mjoshi2795"
 			}
 		}
 	},
