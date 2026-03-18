@@ -13,6 +13,10 @@
 			"GP_USER": {
 				"type": "string",
 				"value": "mjoshi2795"
+			},
+			"gp_warehouse": {
+				"type": "string",
+				"value": "COMPUTE_WH"
 			}
 		}
 	},
