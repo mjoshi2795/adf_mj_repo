@@ -5,6 +5,10 @@
 			"gp_database": {
 				"type": "string",
 				"value": "EXERCISE_DB"
+			},
+			"gp_role": {
+				"type": "string",
+				"value": "ACCOUNTADMIN"
 			}
 		}
 	},
