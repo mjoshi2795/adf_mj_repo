@@ -1,0 +1,12 @@
+{
+	"name": "adf-mj-df",
+	"properties": {
+		"globalParameters": {
+			"gp_database": {
+				"type": "string",
+				"value": "EXERCISE_DB"
+			}
+		}
+	},
+	"location": "eastus"
+}
