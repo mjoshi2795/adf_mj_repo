@@ -1,0 +1,18 @@
+{
+	"gp_database": {
+		"type": "string",
+		"value": "EXERCISE_DB"
+	},
+	"gp_role": {
+		"type": "string",
+		"value": "ACCOUNTADMIN"
+	},
+	"gp_user": {
+		"type": "string",
+		"value": "mjoshi2795"
+	},
+	"gp_warehouse": {
+		"type": "string",
+		"value": "COMPUTE_WH"
+	}
+}

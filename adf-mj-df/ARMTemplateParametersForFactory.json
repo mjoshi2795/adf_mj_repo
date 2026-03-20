@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-mj-df"
+		},
+		"ApplicationKeyValut_properties_typeProperties_baseUrl": {
+			"value": "https://KeyValutAZ.vault.azure.net/"
+		},
+		"LS_SF_01_properties_typeProperties_database": {
+			"value": "@{linkedService().DB}"
+		},
+		"LS_SF_01_properties_typeProperties_role": {
+			"value": "@{linkedService().ROLE}"
+		}
+	}
+}

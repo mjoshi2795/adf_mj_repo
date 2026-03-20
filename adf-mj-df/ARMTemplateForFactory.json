@@ -1,0 +1,196 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adf-mj-df"
+		},
+		"ApplicationKeyValut_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://KeyValutAZ.vault.azure.net/"
+		},
+		"LS_SF_01_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "@{linkedService().DB}"
+		},
+		"LS_SF_01_properties_typeProperties_role": {
+			"type": "string",
+			"defaultValue": "@{linkedService().ROLE}"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_copy_data')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SnowflakeV2Source",
+								"query": "select * from EXERCISE_DB.EXTERNAL_STAGE.EMPLOYEE",
+								"exportSettings": {
+									"type": "SnowflakeExportCopyCommand"
+								},
+								"treatDecimalAsString": false
+							},
+							"dataset": {
+								"referenceName": "SnowflakeTable1",
+								"type": "DatasetReference",
+								"parameters": {
+									"p_db": {
+										"value": "@pipeline().globalParameters.gp_database",
+										"type": "Expression"
+									},
+									"p_wh": {
+										"value": "@pipeline().globalParameters.gp_warehouse",
+										"type": "Expression"
+									},
+									"p_role": {
+										"value": "@pipeline().globalParameters.gp_role",
+										"type": "Expression"
+									},
+									"p_user": {
+										"value": "@pipeline().globalParameters.gp_user",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SnowflakeTable1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SnowflakeTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_SF_01",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DB": {
+							"value": "@dataset().p_db",
+							"type": "Expression"
+						},
+						"WH": {
+							"value": "@dataset().p_wh",
+							"type": "Expression"
+						},
+						"USER": {
+							"value": "@dataset().p_user",
+							"type": "Expression"
+						},
+						"ROLE": {
+							"value": "@dataset().p_role",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"p_db": {
+						"type": "string"
+					},
+					"p_wh": {
+						"type": "string"
+					},
+					"p_role": {
+						"type": "string"
+					},
+					"p_user": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SnowflakeV2Table",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_SF_01')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ApplicationKeyValut')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('ApplicationKeyValut_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_SF_01')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"DB": {
+						"type": "string"
+					},
+					"WH": {
+						"type": "string"
+					},
+					"USER": {
+						"type": "string"
+					},
+					"ROLE": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SnowflakeV2",
+				"typeProperties": {
+					"authenticationType": "Basic",
+					"accountIdentifier": "cf39531.uk-south.azure",
+					"user": "@{linkedService().USER}",
+					"database": "[parameters('LS_SF_01_properties_typeProperties_database')]",
+					"warehouse": "@{linkedService().WH}",
+					"role": "[parameters('LS_SF_01_properties_typeProperties_role')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "ApplicationKeyValut",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "SnowflakePwd"
+					},
+					"useUtcTimestamps": false
+				},
+				"version": "1.1"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ApplicationKeyValut')]"
+			]
+		}
+	]
+}
