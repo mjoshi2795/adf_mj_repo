@@ -1,0 +1,53 @@
+{
+	"name": "pl_copy_data",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup1",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SnowflakeV2Source",
+						"query": "select * from EXERCISE_DB.EXTERNAL_STAGE.EMPLOYEE",
+						"exportSettings": {
+							"type": "SnowflakeExportCopyCommand"
+						},
+						"treatDecimalAsString": false
+					},
+					"dataset": {
+						"referenceName": "SnowflakeTable1",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_db": {
+								"value": "@pipeline().globalParameters.gp_database",
+								"type": "Expression"
+							},
+							"p_wh": {
+								"value": "@pipeline().globalParameters.gp_warehouse",
+								"type": "Expression"
+							},
+							"p_role": {
+								"value": "@pipeline().globalParameters.gp_role",
+								"type": "Expression"
+							},
+							"p_user": {
+								"value": "@pipeline().globalParameters.gp_user",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			}
+		],
+		"annotations": []
+	}
+}
